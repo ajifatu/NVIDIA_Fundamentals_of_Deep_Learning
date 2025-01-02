@@ -1,7 +1,5 @@
 # NVIDIA_Fundamentals_of_Deep_Learning
 
-## What we did:
-
 ### 1st notebook: Image Classification with the MNIST Dataset
 
 - The Deep Learning "Hello world" project!
@@ -62,3 +60,11 @@ Model well trained, let's use it and make predictions on new images. That's call
   - Converted prediction to letter: Each element of the prediction array represents a possible letter in the sign language alphabet. (j and z are not options because they involve moving the hand, and we're only dealing with still photos)  
     `alphabet = "abcdefghiklmnopqrstuvwxy"`  
     `predicted_letter = alphabet[prediction]`
+
+### 5th notebook: Pretrained models
+
+In this notebook, we created "An Automated Doggy Door". Since we need a lot of data to train a DL model, we used the `VGG16` network _pre-trained_ on the ImageNet dataset (a massive dataset, including lots of animals).
+
+- We first loaded the model, and set weights to `DEFAULT`
+- Images should same dimensions as ones model was trained with. Thankfully, the pretrained weights come with their own transforms. So we applied those default transformations and turn it into a batch (required input)
+- We had 1000 possible categories that the image would be placed in (the output shape is 1000). Which is a lot, we just needed the dogs and cats categories. So, we used the `torch.topk` function to give us the top 3 predictions and and checked if argmax index corresponded to dogs or cats
