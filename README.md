@@ -61,10 +61,26 @@ Model well trained, let's use it and make predictions on new images. That's call
     `alphabet = "abcdefghiklmnopqrstuvwxy"`  
     `predicted_letter = alphabet[prediction]`
 
-### 5th notebook: Pretrained models
+### 5th notebook A: Pretrained models
 
 In this notebook, we created "An Automated Doggy Door". Since we need a lot of data to train a DL model, we used the `VGG16` network _pre-trained_ on the ImageNet dataset (a massive dataset, including lots of animals).
 
 - We first loaded the model, and set weights to `DEFAULT`
 - Images should same dimensions as ones model was trained with. Thankfully, the pretrained weights come with their own transforms. So we applied those default transformations and turn it into a batch (required input)
 - We had 1000 possible categories that the image would be placed in (the output shape is 1000). Which is a lot, we just needed the dogs and cats categories. So, we used the `torch.topk` function to give us the top 3 predictions and and checked if argmax index corresponded to dogs or cats
+
+### 5th notebook A: Transfer learning / Finetuning
+
+In last notebook, we used a pre-trained model with no training necessary since it was doing exactly what we needed: Check the type of animal and we on that base made a treatment. But what if we don't find one and neither don't have enough data to train one ? **Tranfer Learning**: take a pre-trained model and retrain it on a task that has some overlap with the original training task. We used the same model as previously, the VGG16 model; goal being to make an automatic doggy door for a dog named Bo, the United States First Dog between 2009 and 2017. (mdrrr?) We have only 30 pictures of Bo
+
+- We started with downloading the pre-trained model and setting weights to DEFAULT
+- We hav the 1000 possible classes in the dataset. In our case, we just wanted to make a different classification: is this Bo or not? We then added new layers to specifically recognize Bo. For that:
+  - We freezed the model's pre-trained layers. `vgg_model.requires_grad_(False)`
+  - Added new layers: We just added a Linear layer connecting all 1000 of VGG16's outputs to 1 neuron `nn.Linear(1000,1)`
+  - Compiled the model with loss and metrics options. Since we have a binary classification problem (Bo or not Bo), and we used binary crossentropy `BCEWithLogitsLoss`
+- We did some data augmentation using preprocessing transforms from the VGG weights to match with model parameters, customed dataset and created dataLoaders
+- We trained model making sure only our newly added layers were learning by checking last set of gradients
+- Result: Both training and validation accuracy were quite high, even with a tiny dataset (30 images): Power of transfer learning. THough, we explored another method: Fine-tuning
+- To do so, we unfreezed the entire model, and trained it again with a very small learning rate.  
+   `vgg_model.requires_grad_(True) `  
+  `optimizer = Adam(my_model.parameters(), lr=.000001) `
