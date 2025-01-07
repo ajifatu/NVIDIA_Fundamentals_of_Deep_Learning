@@ -81,6 +81,21 @@ In last notebook, we used a pre-trained model with no training necessary since i
 - We did some data augmentation using preprocessing transforms from the VGG weights to match with model parameters, customed dataset and created dataLoaders
 - We trained model making sure only our newly added layers were learning by checking last set of gradients
 - Result: Both training and validation accuracy were quite high, even with a tiny dataset (30 images): Power of transfer learning. THough, we explored another method: Fine-tuning
-- To do so, we unfreezed the entire model, and trained it again with a very small learning rate.  
-   `vgg_model.requires_grad_(True) `  
+- To do so, we unfreezed the entire model, and trained it again with a very small learning rate (that prevented overfitting).  
+  `vgg_model.requires_grad_(True) `  
   `optimizer = Adam(my_model.parameters(), lr=.000001) `
+
+### 7th notebook: Assessment !
+
+For the assessment notebook, we trained a new model able to recognize fresh and rotten fruits. Pass mark was 92%. In that order,
+
+- We first applied same as in previous notebooks:
+  - Loaded the base model (vgg16 on ImageNet) and freezed it
+  - Added layers to the model and compiled it (using `CrossEntropyLoss` loss function)
+  - Loaded dataset (vgg16 on ImageNet) and applied transformations
+  - Trained model and got 92% validation accuracy
+    Goal achieved at first try !!!
+- Though, we tried the other method and unfreezed model for fine tuning
+  - Still got 92% validation accuracy !
+
+Assessment passed, certificated!
